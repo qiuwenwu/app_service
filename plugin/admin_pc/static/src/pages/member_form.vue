@@ -13,47 +13,47 @@
 									<dl>
 										<dt>用户</dt>
 										<dd>
-											<mm_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname', 0)" />
+											<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname', 0)" />
 										</dd>
 										<dt>收费方式</dt>
 										<dd>
-											<mm_select v-model="form.way" :options="$to_kv(arr_way)" />
+											<control_select v-model="form.way" :options="$to_kv(arr_way)" />
 										</dd>
 										<dt>默认分类</dt>
 										<dd>
-											<mm_select v-model="form.type_id" :options="$to_kv(list_type, 'type_id', 'name', 0)" />
+											<control_select v-model="form.type_id" :options="$to_kv(list_type, 'type_id', 'name', 0)" />
 										</dd>
 										<dt>所属城市</dt>
 										<dd>
-											<mm_select v-model="form.city_id" :options="$to_kv(list_address_city, 'city_id', 'name', 0)" />
+											<control_select v-model="form.city_id" :options="$to_kv(list_address_city, 'city_id', 'name', 0)" />
 										</dd>
 										<dt>所属市区</dt>
 										<dd>
-											<mm_select v-model="form.area_id" :options="$to_kv(list_address_area, 'area_id', 'name', 0)" />
+											<control_select v-model="form.area_id" :options="$to_kv(list_address_area, 'area_id', 'name', 0)" />
 										</dd>
 										<dt>坐标位置X</dt>
 										<dd>
-											<mm_number v-model="form.position_x" :min="0" :max="0" />
+											<control_number v-model="form.position_x" :min="0" :max="0" />
 										</dd>
 										<dt>坐标位置Y</dt>
 										<dd>
-											<mm_number v-model="form.position_y" :min="0" :max="0" />
+											<control_number v-model="form.position_y" :min="0" :max="0" />
 										</dd>
 										<dt>默认定价</dt>
 										<dd>
-											<mm_number v-model="form.price" :min="1" :max="1000000" />
+											<control_number v-model="form.price" :min="1" :max="1000000" />
 										</dd>
 										<dt>服务者电话</dt>
 										<dd>
-											<mm_input v-model="form.service_phone" :minlength="0" :maxlength="11" placeholder="" />
+											<control_input v-model="form.service_phone" :minlength="0" :maxlength="11" placeholder="" />
 										</dd>
 										<dt>服务者姓名</dt>
 										<dd>
-											<mm_input v-model="form.servicer_name" :minlength="0" :maxlength="16" placeholder="" />
+											<control_input v-model="form.servicer_name" :minlength="0" :maxlength="16" placeholder="" />
 										</dd>
 										<dt class="required">具体地址</dt>
 										<dd>
-											<mm_input v-model="form.address" :minlength="0" :maxlength="255" placeholder=""
+											<control_input v-model="form.address" :minlength="0" :maxlength="255" placeholder=""
 											 :required="true" />
 										</dd>
 									</dl>

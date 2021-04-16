@@ -13,15 +13,15 @@
 									<dl>
 										<dt>评分</dt>
 										<dd>
-											<mm_number v-model="form.score" :min="0" :max="9" />
+											<control_number v-model="form.score" :min="0" :max="9" />
 										</dd>
 										<dt>收入</dt>
 										<dd>
-											<mm_number v-model="form.income" :min="0" :max="0" />
+											<control_number v-model="form.income" :min="0" :max="0" />
 										</dd>
 										<dt>用户ID</dt>
 										<dd>
-											<mm_input v-model="form.user_id" :minlength="0" :maxlength="0" placeholder="" />
+											<control_input v-model="form.user_id" :minlength="0" :maxlength="0" placeholder="" />
 										</dd>
 									</dl>
 								</mm_form>
