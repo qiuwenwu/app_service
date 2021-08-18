@@ -15,7 +15,7 @@
 									</div>
 									<mm_list :col="3">
 										<mm_item>
-											<control_input v-model="query.keyword" title="关键词" desc="服务者姓名"
+											<control_input v-model="query.keyword" title="关键词" desc="需求方姓名 / 服务者姓名 / 正文"
 											 @blur="search()" />
 										</mm_item>
 										<mm_item>
@@ -29,7 +29,7 @@
 											 @change="search()" />
 										</mm_item>
 										<mm_item>
-											<control_select v-model="query.user_id" title="下单用户" :options="$to_kv(list_account, 'user_id', 'nickname')"
+											<control_select v-model="query.demander_id" title="需求方用户" :options="$to_kv(list_account, 'user_id', 'nickname')"
 											 @change="search()" />
 										</mm_item>
 										<mm_item>
@@ -38,6 +38,10 @@
 										</mm_item>
 										<mm_item>
 											<control_select v-model="query.area_id" title="所属市区" :options="$to_kv(list_address_area, 'area_id', 'name')"
+											 @change="search()" />
+										</mm_item>
+										<mm_item>
+											<control_select v-model="query.user_id" title="服务者" :options="$to_kv(list_account, 'user_id', 'nickname')"
 											 @change="search()" />
 										</mm_item>
 										<mm_item>
@@ -71,7 +75,13 @@
 												<control_reverse title="服务分类" v-model="query.orderby" field="type_id" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="下单用户" v-model="query.orderby" field="user_id" :func="search"></control_reverse>
+												<control_reverse title="需求方用户" v-model="query.orderby" field="demander_id" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="联系电话" v-model="query.orderby" field="demander_phone" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="需求方姓名" v-model="query.orderby" field="demander_name" :func="search"></control_reverse>
 											</th>
 											<th>
 												<control_reverse title="所属城市" v-model="query.orderby" field="city_id" :func="search"></control_reverse>
@@ -104,13 +114,22 @@
 												<control_reverse title="具体地址" v-model="query.orderby" field="address" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="联系电话" v-model="query.orderby" field="user_phone" :func="search"></control_reverse>
+												<control_reverse title="服务者电话" v-model="query.orderby" field="phone" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="服务者电话" v-model="query.orderby" field="service_phone" :func="search"></control_reverse>
+												<control_reverse title="服务者姓名" v-model="query.orderby" field="name" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="服务者姓名" v-model="query.orderby" field="servicer_name" :func="search"></control_reverse>
+												<control_reverse title="服务者" v-model="query.orderby" field="user_id" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="评分" v-model="query.orderby" field="score" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="头像地址" v-model="query.orderby" field="avatar" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="服务项" v-model="query.orderby" field="items" :func="search"></control_reverse>
 											</th>
 											<th class="th_handle"><span>操作</span></th>
 										</tr>
@@ -127,16 +146,22 @@
 												<span>{{arr_way[o.way] }}</span>
 											</td>
 											<td>
-												<span>{{ get_name(list_type, o.type_id, 'type_id', 'name') }}</span>
+												<span>{{ $get_name(list_type, o.type_id, 'type_id', 'name') }}</span>
 											</td>
 											<td>
-												<span>{{ get_name(list_account, o.user_id, 'user_id', 'nickname') }}</span>
+												<span>{{ $get_name(list_account, o.demander_id, 'user_id', 'nickname') }}</span>
 											</td>
 											<td>
-												<span>{{ get_name(list_address_city, o.city_id, 'city_id', 'name') }}</span>
+												<span>{{ o.demander_phone }}</span>
 											</td>
 											<td>
-												<span>{{ get_name(list_address_area, o.area_id, 'area_id', 'name') }}</span>
+												<span>{{ o.demander_name }}</span>
+											</td>
+											<td>
+												<span>{{ $get_name(list_address_city, o.city_id, 'city_id', 'name') }}</span>
+											</td>
+											<td>
+												<span>{{ $get_name(list_address_area, o.area_id, 'area_id', 'name') }}</span>
 											</td>
 											<td>
 												<span>{{ o.position_x }}</span>
@@ -163,13 +188,22 @@
 												<span>{{ o.address }}</span>
 											</td>
 											<td>
-												<span>{{ o.user_phone }}</span>
+												<span>{{ o.phone }}</span>
 											</td>
 											<td>
-												<span>{{ o.service_phone }}</span>
+												<span>{{ o.name }}</span>
 											</td>
 											<td>
-												<span>{{ o.servicer_name }}</span>
+												<span>{{ $get_name(list_account, o.user_id, 'user_id', 'nickname') }}</span>
+											</td>
+											<td>
+												<span>{{ o.score }}</span>
+											</td>
+											<td>
+												<img class="avatar" :src="o.avatar" alt="头像地址" />
+											</td>
+											<td>
+												<span>{{ o.items }}</span>
 											</td>
 											<td>
 												<mm_btn class="btn_primary" :url="'./order_form?order_id=' + o[field]">修改</mm_btn>
@@ -202,7 +236,7 @@
 				<div class="card_head">
 					<h5>批量修改</h5>
 				</div>
-				<div class="card_body">
+				<div class="card_body pa">
 					<dl>
 						<dt>状态</dt>
 						<dd>
@@ -216,9 +250,9 @@
 						<dd>
 							<control_select v-model="form.type_id" :options="$to_kv(list_type, 'type_id', 'name')" />
 						</dd>
-						<dt>下单用户</dt>
+						<dt>需求方用户</dt>
 						<dd>
-							<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname')" />
+							<control_select v-model="form.demander_id" :options="$to_kv(list_account, 'user_id', 'nickname')" />
 						</dd>
 						<dt>所属城市</dt>
 						<dd>
@@ -227,6 +261,10 @@
 						<dt>所属市区</dt>
 						<dd>
 							<control_select v-model="form.area_id" :options="$to_kv(list_address_area, 'area_id', 'name')" />
+						</dd>
+						<dt>服务者</dt>
+						<dd>
+							<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname')" />
 						</dd>
 					</dl>
 				</div>
@@ -274,6 +312,16 @@
 					'way_min': '',
 					// 收费方式——最大值
 					'way_max': '',
+					// 服务分类ID
+					'type_id': '',
+					// 需求方用户ID
+					'demander_id': '',
+					// 需求方姓名
+					'demander_name': '',
+					// 所属城市ID
+					'city_id': '',
+					// 所属市区ID
+					'area_id': '',
 					// 坐标位置X——最小值
 					'position_x_min': 0,
 					// 坐标位置X——最大值
@@ -303,7 +351,15 @@
 					// 更新时间——结束时间
 					'time_update_max': '',
 					// 服务者姓名
-					'servicer_name': '',
+					'name': '',
+					// 服务者ID
+					'user_id': '',
+					// 评分——最小值
+					'score_min': 0,
+					// 评分——最大值
+					'score_max': 0,
+					// 正文
+					'content': '',
 					// 关键词
 					'keyword': '',
 					//排序
@@ -318,12 +374,14 @@
 				'arr_way':["","次","时","日","周","月","季","年"],
 				// 服务分类
 				'list_type':[],
-				// 下单用户
+				// 需求方用户
 				'list_account':[],
 				// 所属城市
 				'list_address_city':[],
 				// 所属市区
 				'list_address_area':[],
+				// 服务者
+				'list_account':[],
 				// 视图模型
 				vm: {}
 			}
@@ -348,7 +406,7 @@
 				});
 			},
 			/**
-			 * 获取下单用户
+			 * 获取需求方用户
 			 * @param {query} 查询条件
 			 */
 			get_account(query) {
@@ -401,16 +459,36 @@
 					}
 				});
 			},
+			/**
+			 * 获取服务者
+			 * @param {query} 查询条件
+			 */
+			get_account(query) {
+				var _this = this;
+				if (!query) {
+					query = {
+						field: "user_id,nickname"
+					};
+				}
+				this.$get('~/apis/user/account?size=0', query, function(json) {
+					if (json.result) {
+						_this.list_account.clear();
+						_this.list_account.addList(json.result.list)
+					}
+				});
+			},
 		},
 		created() {
 			// 获取服务分类
 			this.get_type();
-			// 获取下单用户
+			// 获取需求方用户
 			this.get_account();
 			// 获取所属城市
 			this.get_address_city();
 			// 获取所属市区
 			this.get_address_area();
+			// 获取服务者
+			this.get_account();
 		}
 	}
 </script>

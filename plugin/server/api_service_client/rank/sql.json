@@ -1,11 +1,12 @@
 {
-    "name": "service_order2",
-    "title": "订单信息",
+    "name": "service_rank",
+    "title": "排行信息",
     "table": "service_order",
     "key": "order_id",
     "orderby_default": "`order_id` desc",
-    "field_obj": "`order_id`,`state`,`way`,`type_id`,`demander_id`,`demander_phone`,`demander_name`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`price_ago`,`time_validity`,`address`,`phone`,`name`,`user_id`,`score`,`avatar`,`items`,`content`",
+    "field_obj": "`order_id`,`state`,`way`,`type_id`,`demander_id`,`demander_phone`,`demander_name`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`price_ago`,`time_validity`,`time_create`,`time_update`,`address`,`phone`,`name`,`user_id`,`score`,`avatar`,`items`,`content`",
     "field_default": "`order_id`,`state`,`way`,`type_id`,`demander_id`,`demander_phone`,`demander_name`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`price_ago`,`time_validity`,`time_create`,`time_update`,`address`,`phone`,`name`,`user_id`,`score`,`avatar`,`items`",
+    "method": "get get_obj avg sum count",
     "query": {
         "order_number": "`order_number` like '%{0}%'",
         "name": "`name` like '%{0}%'",
@@ -126,5 +127,5 @@
             "id": "user_id"
         }
     ],
-    "field_hide": []
+    "query_default": {}
 }

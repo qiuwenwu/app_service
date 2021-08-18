@@ -3,10 +3,10 @@
     "title": "服务成员",
     "table": "service_member",
     "key": "member_id",
-    "orderby_default": "`member_id` desc",
-    "field_obj": "`member_id`,`user_id`,`way`,`type_id`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`time_create`,`time_update`,`service_phone`,`servicer_name`,`address`",
-    "field_default": "`member_id`,`user_id`,`way`,`type_id`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`time_create`,`time_update`,`service_phone`,`servicer_name`,`address`",
-    "method": "get get_obj sum count",
+    "orderby_default": "`display` asc",
+    "field_obj": "`member_id`,`available`,`state`,`way`,`type_id`,`user_id`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`time_create`,`time_update`,`phone`,`name`,`score`,`avatar`,`age`,`address`,`medal`,`hot`,`praise`,`num`,`items`,`content`",
+    "field_default": "`member_id`,`available`,`state`,`display`,`way`,`type_id`,`user_id`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`time_create`,`time_update`,`phone`,`name`,`score`,`avatar`,`age`,`address`,`medal`,`hot`,`praise`,`num`,`items`",
+    "method": "add set get get_obj avg sum count",
     "query": {
         "way_min": "`way` >= {0}",
         "way_max": "`way` <= {0}",
@@ -23,21 +23,70 @@
         "service_phone": "`service_phone` like '%{0}%'",
         "servicer_name": "`servicer_name` like '%{0}%'",
         "address": "`address` like '%{0}%'",
-        "keyword": "(`servicer_name` like '%{0}%')"
+        "keyword": "(`name` like '%{0}%')",
+        "father_id": "`type_id` in (select `type_id` from `service_type` where `father_id` = {0})",
+        "phone": "`phone` like '%{0}%'",
+        "name": "`name` like '%{0}%'",
+        "score_min": "`score` >= {0}",
+        "score_max": "`score` <= {0}",
+        "avatar": "`avatar` like '%{0}%'",
+        "age_min": "`age` >= {0}",
+        "age_max": "`age` <= {0}",
+        "medal_min": "`medal` >= {0}",
+        "medal_max": "`medal` <= {0}",
+        "state_min": "`state` >= {0}",
+        "state_max": "`state` <= {0}",
+        "display_min": "`display` >= {0}",
+        "display_max": "`display` <= {0}",
+        "hot_min": "`hot` >= {0}",
+        "hot_max": "`hot` <= {0}",
+        "praise_min": "`praise` >= {0}",
+        "praise_max": "`praise` <= {0}",
+        "num_min": "`num` >= {0}",
+        "num_max": "`num` <= {0}",
+        "items": "`items` like '%{0}%'",
+        "content": "`content` like '%{0}%'"
     },
-    "query_default": {},
+    "query_default": {
+		"user_id": "`user_id`={user_id}"
+	},
+	"body_default": {
+		"user_id": "`user_id`={user_id}"
+	},
     "update": {
         "way_add": "`way` = `way` + {0}",
         "position_x_add": "`position_x` = `position_x` + {0}",
         "position_y_add": "`position_y` = `position_y` + {0}",
-        "price_add": "`price` = `price` + {0}"
+        "price_add": "`price` = `price` + {0}",
+        "score_add": "`score` = `score` + {0}",
+        "age_add": "`age` = `age` + {0}",
+        "medal_add": "`medal` = `medal` + {0}",
+        "state_add": "`state` = `state` + {0}",
+        "display_add": "`display` = `display` + {0}",
+        "hot_add": "`hot` = `hot` + {0}",
+        "praise_add": "`praise` = `praise` + {0}",
+        "num_add": "`num` = `num` + {0}"
     },
     "format": [
         {
-            "key": "user_id",
-            "title": "用户",
-            "table": "user_account",
-            "name": "nickname"
+            "key": "available",
+            "title": "是否启用",
+            "list": [
+                "否",
+                "是"
+            ]
+        },
+        {
+            "key": "state",
+            "title": "状态",
+            "list": [
+                "",
+                "空闲中",
+                "工作中",
+                "休假中",
+                "已退出",
+                "已违规"
+            ]
         },
         {
             "key": "way",
@@ -60,6 +109,12 @@
             "name": "name"
         },
         {
+            "key": "user_id",
+            "title": "用户",
+            "table": "user_account",
+            "name": "nickname"
+        },
+        {
             "key": "city_id",
             "title": "所属城市",
             "table": "sys_address_city",
@@ -70,6 +125,17 @@
             "title": "所属市区",
             "table": "sys_address_area",
             "name": "name"
+        },
+        {
+            "key": "medal",
+            "title": "奖牌",
+            "list": [
+                "",
+                "无",
+                "铜牌",
+                "银牌",
+                "金牌"
+            ]
         }
     ]
 }

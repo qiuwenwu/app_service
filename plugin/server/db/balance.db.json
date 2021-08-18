@@ -74,13 +74,13 @@
             "min": 0,
             "max": 9,
             "decimal": 0,
-            "default": "0",
-            "map": ""
+            "default": "1",
+            "map": "1申请中|2已提取|3已取消"
         },
         {
             "name": "user_id",
             "title": "结款人",
-            "description": "",
+            "description": "是谁申请的结算",
             "type": "int",
             "key": false,
             "auto": "",
@@ -93,6 +93,24 @@
             "max": 2147483647,
             "decimal": 0,
             "default": "0",
+            "map": "user_account.nickname"
+        },
+        {
+            "name": "desc",
+            "title": "备注",
+            "description": "强制取消的理由",
+            "type": "text",
+            "key": false,
+            "auto": "",
+            "symbol": false,
+            "fill_zero": false,
+            "not_null": 0,
+            "min_length": 0,
+            "max_length": 0,
+            "min": 0,
+            "max": 0,
+            "decimal": 0,
+            "default": null,
             "map": ""
         },
         {

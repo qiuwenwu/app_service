@@ -4,9 +4,9 @@
     "table": "service_order",
     "key": "order_id",
     "orderby_default": "`order_id` desc",
-    "field_obj": "`order_id`,`state`,`way`,`type_id`,`user_id`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`price_ago`,`time_validity`,`time_create`,`time_update`,`address`,`user_phone`,`service_phone`,`servicer_name`",
-    "field_default": "`order_id`,`state`,`way`,`type_id`,`user_id`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`price_ago`,`time_validity`,`time_create`,`time_update`,`address`,`user_phone`,`service_phone`,`servicer_name`",
-    "method": "get get_obj sum count",
+    "field_obj": "`order_id`,`state`,`way`,`type_id`,`demander_id`,`demander_phone`,`demander_name`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`price_ago`,`time_validity`,`time_create`,`time_update`,`address`,`phone`,`name`,`user_id`,`score`,`avatar`,`items`,`content`",
+    "field_default": "`order_id`,`state`,`way`,`type_id`,`demander_id`,`demander_phone`,`demander_name`,`city_id`,`area_id`,`position_x`,`position_y`,`price`,`price_ago`,`time_validity`,`time_create`,`time_update`,`address`,`phone`,`name`,`user_id`,`score`,`avatar`,`items`",
+    "method": "add set get get_obj avg sum count",
     "query": {
         "order_number": "`order_number` like '%{0}%'",
         "name": "`name` like '%{0}%'",
@@ -29,7 +29,7 @@
         "createtime_max": "`createtime` <= '{0}'",
         "updatetime_min": "`updatetime` >= '{0}'",
         "updatetime_max": "`updatetime` <= '{0}'",
-        "keyword": "(`servicer_name` like '%{0}%')",
+        "keyword": "(`demander_name` like '%{0}%' || `name` like '%{0}%')",
         "way_min": "`way` >= {0}",
         "way_max": "`way` <= {0}",
         "position_x_min": "`position_x` >= {0}",
@@ -47,9 +47,14 @@
         "address": "`address` like '%{0}%'",
         "user_phone": "`user_phone` like '%{0}%'",
         "service_phone": "`service_phone` like '%{0}%'",
-        "servicer_name": "`servicer_name` like '%{0}%'"
+        "servicer_name": "`servicer_name` like '%{0}%'",
+        "score": "`score` like '%{0}%'",
+        "avatar": "`avatar` like '%{0}%'",
+        "items": "`items` like '%{0}%'",
+        "content": "`content` like '%{0}%'",
+        "demander_phone": "`demander_phone` like '%{0}%'",
+        "demander_name": "`demander_name` like '%{0}%'"
     },
-    "query_default": {},
     "update": {
         "price_add": "`price` = `price` + {0}",
         "num_add": "`num` = `num` + {0}",
@@ -96,8 +101,8 @@
             "name": "name"
         },
         {
-            "key": "user_id",
-            "title": "下单用户",
+            "key": "demander_id",
+            "title": "需求方用户",
             "table": "user_account",
             "name": "nickname",
             "id": "user_id"
@@ -113,6 +118,14 @@
             "title": "所属市区",
             "table": "sys_address_area",
             "name": "name"
+        },
+        {
+            "key": "user_id",
+            "title": "服务者",
+            "table": "user_account",
+            "name": "nickname",
+            "id": "user_id"
         }
-    ]
+    ],
+    "query_default": {}
 }

@@ -1,8 +1,8 @@
 {
-    "name": "service_info_manage",
-    "title": "服务信息",
-    "description": "",
-    "path": "/apis/service/info",
+    "name": "service_nav_manage",
+    "title": "服务导航",
+    "description": "用于自定义同城服务应用的导航",
+    "path": "/apis/service/nav",
     "method": "ALL",
     "cache": 0,
     "client_cache": false,

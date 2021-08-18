@@ -3,16 +3,28 @@
     "title": "服务成员",
     "add": {
         "body": [
-            "user_id",
+            "available",
+            "state",
+            "display",
             "way",
             "type_id",
+            "user_id",
             "city_id",
             "area_id",
             "position_x",
             "position_y",
             "price",
-            "service_phone",
-            "servicer_name"
+            "phone",
+            "name",
+            "score",
+            "avatar",
+            "age",
+            "medal",
+            "hot",
+            "praise",
+            "num",
+            "items",
+            "content"
         ],
         "body_required": [
             "address"
@@ -27,6 +39,11 @@
     "set": {
         "query": [
             "member_id",
+            "available",
+            "state_min",
+            "state_max",
+            "display_min",
+            "display_max",
             "way_min",
             "way_max",
             "position_x_min",
@@ -35,15 +52,33 @@
             "position_y_max",
             "price_min",
             "price_max",
-            "servicer_name",
+            "name",
+            "score_min",
+            "score_max",
+            "age_min",
+            "age_max",
+            "medal_min",
+            "medal_max",
+            "hot_min",
+            "hot_max",
+            "praise_min",
+            "praise_max",
+            "num_min",
+            "num_max",
+            "content",
             "keyword"
         ],
         "query_required": [],
         "body": [
-            "user_id",
+            "available",
+            "state",
+            "state_add",
+            "display",
+            "display_add",
             "way",
             "way_add",
             "type_id",
+            "user_id",
             "city_id",
             "area_id",
             "position_x",
@@ -52,9 +87,24 @@
             "position_y_add",
             "price",
             "price_add",
-            "service_phone",
-            "servicer_name",
-            "address"
+            "phone",
+            "name",
+            "score",
+            "score_add",
+            "avatar",
+            "age",
+            "age_add",
+            "address",
+            "medal",
+            "medal_add",
+            "hot",
+            "hot_add",
+            "praise",
+            "praise_add",
+            "num",
+            "num_add",
+            "items",
+            "content"
         ],
         "body_required": [],
         "body_not": []
@@ -62,8 +112,17 @@
     "get": {
         "query": [
             "member_id",
+            "available",
+            "state_min",
+            "state_max",
+            "display_min",
+            "display_max",
             "way_min",
             "way_max",
+            "type_id",
+            "user_id",
+            "city_id",
+            "area_id",
             "position_x_min",
             "position_x_max",
             "position_y_min",
@@ -74,7 +133,20 @@
             "time_create_max",
             "time_update_min",
             "time_update_max",
-            "servicer_name",
+            "name",
+            "score_min",
+            "score_max",
+            "age_min",
+            "age_max",
+            "medal_min",
+            "medal_max",
+            "hot_min",
+            "hot_max",
+            "praise_min",
+            "praise_max",
+            "num_min",
+            "num_max",
+            "content",
             "keyword"
         ],
         "query_required": []
@@ -96,13 +168,73 @@
             }
         },
         {
-            "name": "user_id",
-            "title": "用户ID",
-            "description": "提供这些服务的用户ID(user_account.nickname)",
+            "name": "available",
+            "title": "是否启用",
+            "description": "启用后前台才会显示该产品(0否|1是)",
             "type": "number",
-            "dataType": "mediumint",
+            "dataType": "tinyint",
             "number": {
-                "max": 8388607
+                "max": 1
+            }
+        },
+        {
+            "name": "state",
+            "title": "状态",
+            "description": "(1空闲中|2工作中|3休假中|4已退出|5已违规)",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "state_min",
+            "title": "状态——最小值",
+            "description": "(1空闲中|2工作中|3休假中|4已退出|5已违规)",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "state_max",
+            "title": "状态——最大值",
+            "description": "(1空闲中|2工作中|3休假中|4已退出|5已违规)",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "display",
+            "title": "排序",
+            "description": "决定成员显示的顺序",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 10000
+            }
+        },
+        {
+            "name": "display_min",
+            "title": "排序——最小值",
+            "description": "决定成员显示的顺序",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 10000
+            }
+        },
+        {
+            "name": "display_max",
+            "title": "排序——最大值",
+            "description": "决定成员显示的顺序",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 10000
             }
         },
         {
@@ -143,6 +275,16 @@
             "dataType": "smallint",
             "number": {
                 "max": 1000
+            }
+        },
+        {
+            "name": "user_id",
+            "title": "用户ID",
+            "description": "提供这些服务的用户ID(user_account.nickname)",
+            "type": "number",
+            "dataType": "mediumint",
+            "number": {
+                "max": 8388607
             }
         },
         {
@@ -319,17 +461,18 @@
             }
         },
         {
-            "name": "service_phone",
+            "name": "phone",
             "title": "服务者电话",
             "description": "",
             "type": "string",
             "dataType": "varchar",
             "string": {
-                "max": 11
+                "max": 11,
+                "format": "phone"
             }
         },
         {
-            "name": "servicer_name",
+            "name": "name",
             "title": "服务者姓名",
             "description": "",
             "type": "string",
@@ -339,8 +482,78 @@
             }
         },
         {
+            "name": "score",
+            "title": "评分",
+            "description": "最低0分，最高5分",
+            "type": "number",
+            "dataType": "double",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "score_min",
+            "title": "评分——最小值",
+            "description": "最低0分，最高5分",
+            "type": "number",
+            "dataType": "double",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "score_max",
+            "title": "评分——最大值",
+            "description": "最低0分，最高5分",
+            "type": "number",
+            "dataType": "double",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "avatar",
+            "title": "头像地址",
+            "description": "",
+            "type": "string",
+            "dataType": "varchar",
+            "string": {
+                "max": 255
+            }
+        },
+        {
+            "name": "age",
+            "title": "服务者年龄",
+            "description": "",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 9999
+            }
+        },
+        {
+            "name": "age_min",
+            "title": "服务者年龄——最小值",
+            "description": "",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 9999
+            }
+        },
+        {
+            "name": "age_max",
+            "title": "服务者年龄——最大值",
+            "description": "",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 9999
+            }
+        },
+        {
             "name": "address",
-            "title": "具体地址",
+            "title": "所在地址",
             "description": "",
             "type": "string",
             "dataType": "varchar",
@@ -350,9 +563,145 @@
             }
         },
         {
+            "name": "medal",
+            "title": "奖牌",
+            "description": "默认为1(1无|2铜牌|3银牌|4金牌)",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 9
+            }
+        },
+        {
+            "name": "medal_min",
+            "title": "奖牌——最小值",
+            "description": "默认为1(1无|2铜牌|3银牌|4金牌)",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 9
+            }
+        },
+        {
+            "name": "medal_max",
+            "title": "奖牌——最大值",
+            "description": "默认为1(1无|2铜牌|3银牌|4金牌)",
+            "type": "number",
+            "dataType": "smallint",
+            "number": {
+                "max": 9
+            }
+        },
+        {
+            "name": "hot",
+            "title": "热度",
+            "description": "访问这服务的人次",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "hot_min",
+            "title": "热度——最小值",
+            "description": "访问这服务的人次",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "hot_max",
+            "title": "热度——最大值",
+            "description": "访问这服务的人次",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "praise",
+            "title": "点赞次数",
+            "description": "",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "praise_min",
+            "title": "点赞次数——最小值",
+            "description": "",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "praise_max",
+            "title": "点赞次数——最大值",
+            "description": "",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "num",
+            "title": "服务次数",
+            "description": "",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "num_min",
+            "title": "服务次数——最小值",
+            "description": "",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "num_max",
+            "title": "服务次数——最大值",
+            "description": "",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 1000000000
+            }
+        },
+        {
+            "name": "items",
+            "title": "服务项",
+            "description": "用于说明提供的服务项和价格",
+            "type": "string",
+            "dataType": "text",
+            "string": {}
+        },
+        {
+            "name": "content",
+            "title": "正文",
+            "description": "服务的内容，用于介绍具体提供哪些服务",
+            "type": "string",
+            "dataType": "text",
+            "string": {}
+        },
+        {
             "name": "keyword",
             "title": "关键词",
-            "description": "用于搜索服务者姓名(servicer_name)",
+            "description": "用于搜索服务者姓名(name)、正文(content)",
             "type": "string",
             "dataType": "varchar",
             "string": {}

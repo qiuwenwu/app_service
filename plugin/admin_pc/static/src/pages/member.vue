@@ -15,12 +15,14 @@
 									</div>
 									<mm_list :col="3">
 										<mm_item>
-											<control_input v-model="query.keyword" title="关键词" desc="服务者姓名"
+											<control_input v-model="query.keyword" title="关键词" desc="服务者姓名 / 正文"
 											 @blur="search()" />
 										</mm_item>
 										<mm_item>
-											<control_select v-model="query.user_id" title="用户" :options="$to_kv(list_account, 'user_id', 'nickname')"
-											 @change="search()" />
+											<control_select v-model="query.available" title="是否启用" :options="$to_kv(arr_available)" @change="search()" />
+										</mm_item>
+										<mm_item>
+											<control_select v-model="query.state" title="状态" :options="$to_kv(arr_state)" @change="search()" />
 										</mm_item>
 										<mm_item>
 											<control_select v-model="query.way" title="收费方式" :options="$to_kv(arr_way)" @change="search()" />
@@ -30,12 +32,19 @@
 											 @change="search()" />
 										</mm_item>
 										<mm_item>
+											<control_select v-model="query.user_id" title="用户" :options="$to_kv(list_account, 'user_id', 'nickname')"
+											 @change="search()" />
+										</mm_item>
+										<mm_item>
 											<control_select v-model="query.city_id" title="所属城市" :options="$to_kv(list_address_city, 'city_id', 'name')"
 											 @change="search()" />
 										</mm_item>
 										<mm_item>
 											<control_select v-model="query.area_id" title="所属市区" :options="$to_kv(list_address_area, 'area_id', 'name')"
 											 @change="search()" />
+										</mm_item>
+										<mm_item>
+											<control_select v-model="query.medal" title="奖牌" :options="$to_kv(arr_medal)" @change="search()" />
 										</mm_item>
 										<mm_item>
 											<mm_btn class="btn_primary-x" type="reset" @click.native="reset();search()">重置</mm_btn>
@@ -59,13 +68,22 @@
 											<th class="th_selected"><input type="checkbox" :checked="select_state" @click="select_all()" /></th>
 											<th class="th_id"><span>#</span></th>
 											<th>
-												<control_reverse title="用户" v-model="query.orderby" field="user_id" :func="search"></control_reverse>
+												<control_reverse title="是否启用" v-model="query.orderby" field="available" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="状态" v-model="query.orderby" field="state" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="排序" v-model="query.orderby" field="display" :func="search"></control_reverse>
 											</th>
 											<th>
 												<control_reverse title="收费方式" v-model="query.orderby" field="way" :func="search"></control_reverse>
 											</th>
 											<th>
 												<control_reverse title="默认分类" v-model="query.orderby" field="type_id" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="用户" v-model="query.orderby" field="user_id" :func="search"></control_reverse>
 											</th>
 											<th>
 												<control_reverse title="所属城市" v-model="query.orderby" field="city_id" :func="search"></control_reverse>
@@ -89,13 +107,37 @@
 												<control_reverse title="更新时间" v-model="query.orderby" field="time_update" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="服务者电话" v-model="query.orderby" field="service_phone" :func="search"></control_reverse>
+												<control_reverse title="服务者电话" v-model="query.orderby" field="phone" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="服务者姓名" v-model="query.orderby" field="servicer_name" :func="search"></control_reverse>
+												<control_reverse title="服务者姓名" v-model="query.orderby" field="name" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="具体地址" v-model="query.orderby" field="address" :func="search"></control_reverse>
+												<control_reverse title="评分" v-model="query.orderby" field="score" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="头像地址" v-model="query.orderby" field="avatar" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="服务者年龄" v-model="query.orderby" field="age" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="所在地址" v-model="query.orderby" field="address" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="奖牌" v-model="query.orderby" field="medal" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="热度" v-model="query.orderby" field="hot" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="点赞次数" v-model="query.orderby" field="praise" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="服务次数" v-model="query.orderby" field="num" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="服务项" v-model="query.orderby" field="items" :func="search"></control_reverse>
 											</th>
 											<th class="th_handle"><span>操作</span></th>
 										</tr>
@@ -106,19 +148,28 @@
 											<th class="th_selected"><input type="checkbox" :checked="select_has(o[field])" @click="select_change(o[field])" /></th>
 											<td>{{ o[field] }}</td>
 											<td>
-												<span>{{ get_name(list_account, o.user_id, 'user_id', 'nickname') }}</span>
+												<control_switch v-model="o.available" @click.native="set(o)" />
+											</td>
+											<td>
+												<span v-bind:class="arr_color[o.state]">{{arr_state[o.state] }}</span>
+											</td>
+											<td>
+												<input class="input_display" v-model.number="o.display" @blur="set(o)" min="0" max="1000" />
 											</td>
 											<td>
 												<span>{{arr_way[o.way] }}</span>
 											</td>
 											<td>
-												<span>{{ get_name(list_type, o.type_id, 'type_id', 'name') }}</span>
+												<span>{{ $get_name(list_type, o.type_id, 'type_id', 'name') }}</span>
 											</td>
 											<td>
-												<span>{{ get_name(list_address_city, o.city_id, 'city_id', 'name') }}</span>
+												<span>{{ $get_name(list_account, o.user_id, 'user_id', 'nickname') }}</span>
 											</td>
 											<td>
-												<span>{{ get_name(list_address_area, o.area_id, 'area_id', 'name') }}</span>
+												<span>{{ $get_name(list_address_city, o.city_id, 'city_id', 'name') }}</span>
+											</td>
+											<td>
+												<span>{{ $get_name(list_address_area, o.area_id, 'area_id', 'name') }}</span>
 											</td>
 											<td>
 												<span>{{ o.position_x }}</span>
@@ -136,13 +187,37 @@
 												<span>{{ $to_time(o.time_update, 'yyyy-MM-dd hh:mm') }}</span>
 											</td>
 											<td>
-												<span>{{ o.service_phone }}</span>
+												<span>{{ o.phone }}</span>
 											</td>
 											<td>
-												<span>{{ o.servicer_name }}</span>
+												<span>{{ o.name }}</span>
+											</td>
+											<td>
+												<span>{{ o.score }}</span>
+											</td>
+											<td>
+												<img class="avatar" :src="o.avatar" alt="头像地址" />
+											</td>
+											<td>
+												<span>{{ o.age }}</span>
 											</td>
 											<td>
 												<span>{{ o.address }}</span>
+											</td>
+											<td>
+												<span>{{arr_medal[o.medal] }}</span>
+											</td>
+											<td>
+												<span>{{ o.hot }}</span>
+											</td>
+											<td>
+												<span>{{ o.praise }}</span>
+											</td>
+											<td>
+												<span>{{ o.num }}</span>
+											</td>
+											<td>
+												<span>{{ o.items }}</span>
 											</td>
 											<td>
 												<mm_btn class="btn_primary" :url="'./member_form?member_id=' + o[field]">修改</mm_btn>
@@ -175,11 +250,15 @@
 				<div class="card_head">
 					<h5>批量修改</h5>
 				</div>
-				<div class="card_body">
+				<div class="card_body pa">
 					<dl>
-						<dt>用户</dt>
+						<dt>是否启用</dt>
 						<dd>
-							<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname')" />
+							<control_select v-model="form.available" :options="$to_kv(arr_available)" />
+						</dd>
+						<dt>状态</dt>
+						<dd>
+							<control_select v-model="form.state" :options="$to_kv(arr_state)" />
 						</dd>
 						<dt>收费方式</dt>
 						<dd>
@@ -189,6 +268,10 @@
 						<dd>
 							<control_select v-model="form.type_id" :options="$to_kv(list_type, 'type_id', 'name')" />
 						</dd>
+						<dt>用户</dt>
+						<dd>
+							<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname')" />
+						</dd>
 						<dt>所属城市</dt>
 						<dd>
 							<control_select v-model="form.city_id" :options="$to_kv(list_address_city, 'city_id', 'name')" />
@@ -196,6 +279,10 @@
 						<dt>所属市区</dt>
 						<dd>
 							<control_select v-model="form.area_id" :options="$to_kv(list_address_area, 'area_id', 'name')" />
+						</dd>
+						<dt>奖牌</dt>
+						<dd>
+							<control_select v-model="form.medal" :options="$to_kv(arr_medal)" />
 						</dd>
 					</dl>
 				</div>
@@ -235,10 +322,28 @@
 					size: 10,
 					// 成员ID
 					'member_id': 0,
+					// 是否启用
+					'available': '',
+					// 状态——最小值
+					'state_min': '',
+					// 状态——最大值
+					'state_max': '',
+					// 排序——最小值
+					'display_min': 0,
+					// 排序——最大值
+					'display_max': 0,
 					// 收费方式——最小值
 					'way_min': '',
 					// 收费方式——最大值
 					'way_max': '',
+					// 默认分类ID
+					'type_id': '',
+					// 用户ID
+					'user_id': '',
+					// 所属城市ID
+					'city_id': '',
+					// 所属市区ID
+					'area_id': '',
 					// 坐标位置X——最小值
 					'position_x_min': 0,
 					// 坐标位置X——最大值
@@ -260,7 +365,33 @@
 					// 更新时间——结束时间
 					'time_update_max': '',
 					// 服务者姓名
-					'servicer_name': '',
+					'name': '',
+					// 评分——最小值
+					'score_min': 0,
+					// 评分——最大值
+					'score_max': 0,
+					// 服务者年龄——最小值
+					'age_min': 0,
+					// 服务者年龄——最大值
+					'age_max': 0,
+					// 奖牌——最小值
+					'medal_min': '',
+					// 奖牌——最大值
+					'medal_max': '',
+					// 热度——最小值
+					'hot_min': 0,
+					// 热度——最大值
+					'hot_max': 0,
+					// 点赞次数——最小值
+					'praise_min': 0,
+					// 点赞次数——最大值
+					'praise_max': 0,
+					// 服务次数——最小值
+					'num_min': 0,
+					// 服务次数——最大值
+					'num_max': 0,
+					// 正文
+					'content': '',
 					// 关键词
 					'keyword': '',
 					//排序
@@ -269,39 +400,27 @@
 				form: {},
 				//颜色
 				arr_color: ['', '', 'font_yellow', 'font_success', 'font_warning', 'font_primary', 'font_info', 'font_default'],
-				// 用户
-				'list_account':[],
+				// 是否启用
+				'arr_available':["否","是"],
+				// 状态
+				'arr_state':["","空闲中","工作中","休假中","已退出","已违规"],
 				// 收费方式
 				'arr_way':["","次","时","日","周","月","季","年"],
 				// 默认分类
 				'list_type':[],
+				// 用户
+				'list_account':[],
 				// 所属城市
 				'list_address_city':[],
 				// 所属市区
 				'list_address_area':[],
+				// 奖牌
+				'arr_medal':["","无","铜牌","银牌","金牌"],
 				// 视图模型
 				vm: {}
 			}
 		},
 		methods: {
-			/**
-			 * 获取用户
-			 * @param {query} 查询条件
-			 */
-			get_account(query) {
-				var _this = this;
-				if (!query) {
-					query = {
-						field: "user_id,nickname"
-					};
-				}
-				this.$get('~/apis/user/account?size=0', query, function(json) {
-					if (json.result) {
-						_this.list_account.clear();
-						_this.list_account.addList(json.result.list)
-					}
-				});
-			},
 			/**
 			 * 获取默认分类
 			 * @param {query} 查询条件
@@ -317,6 +436,24 @@
 					if (json.result) {
 						_this.list_type.clear();
 						_this.list_type.addList(json.result.list)
+					}
+				});
+			},
+			/**
+			 * 获取用户
+			 * @param {query} 查询条件
+			 */
+			get_account(query) {
+				var _this = this;
+				if (!query) {
+					query = {
+						field: "user_id,nickname"
+					};
+				}
+				this.$get('~/apis/user/account?size=0', query, function(json) {
+					if (json.result) {
+						_this.list_account.clear();
+						_this.list_account.addList(json.result.list)
 					}
 				});
 			},
@@ -358,10 +495,10 @@
 			},
 		},
 		created() {
-			// 获取用户
-			this.get_account();
 			// 获取默认分类
 			this.get_type();
+			// 获取用户
+			this.get_account();
 			// 获取所属城市
 			this.get_address_city();
 			// 获取所属市区

@@ -6,7 +6,8 @@
             "remain_cash",
             "settlement",
             "state",
-            "user_id"
+            "user_id",
+            "desc"
         ],
         "body_required": []
     },
@@ -34,7 +35,8 @@
             "settlement_add",
             "state",
             "state_add",
-            "user_id"
+            "user_id",
+            "desc"
         ],
         "body_required": [],
         "body_not": []
@@ -48,6 +50,7 @@
             "settlement_max",
             "state_min",
             "state_max",
+            "user_id",
             "time_create_min",
             "time_create_max",
             "time_update_min",
@@ -122,7 +125,7 @@
         {
             "name": "state",
             "title": "状态",
-            "description": "",
+            "description": "(1申请中|2已提取|3已取消)",
             "type": "number",
             "dataType": "mediumint",
             "number": {
@@ -132,7 +135,7 @@
         {
             "name": "state_min",
             "title": "状态——最小值",
-            "description": "",
+            "description": "(1申请中|2已提取|3已取消)",
             "type": "number",
             "dataType": "mediumint",
             "number": {
@@ -142,7 +145,7 @@
         {
             "name": "state_max",
             "title": "状态——最大值",
-            "description": "",
+            "description": "(1申请中|2已提取|3已取消)",
             "type": "number",
             "dataType": "mediumint",
             "number": {
@@ -152,12 +155,20 @@
         {
             "name": "user_id",
             "title": "结款人",
-            "description": "",
+            "description": "是谁申请的结算(user_account.nickname)",
             "type": "number",
             "dataType": "int",
             "number": {
                 "max": 2147483647
             }
+        },
+        {
+            "name": "desc",
+            "title": "备注",
+            "description": "强制取消的理由",
+            "type": "string",
+            "dataType": "text",
+            "string": {}
         },
         {
             "name": "time_create",

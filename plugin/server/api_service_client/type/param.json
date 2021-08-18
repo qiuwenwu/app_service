@@ -40,6 +40,7 @@
             "type_id",
             "display_min",
             "display_max",
+            "father_id",
             "name",
             "keyword"
         ],

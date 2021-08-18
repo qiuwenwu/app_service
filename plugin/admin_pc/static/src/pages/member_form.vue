@@ -11,9 +11,13 @@
 							<div class="card_body">
 								<mm_form>
 									<dl>
-										<dt>用户</dt>
+										<dt>是否启用</dt>
 										<dd>
-											<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname', 0)" />
+											<control_switch v-model="form.available" />
+										</dd>
+										<dt>状态</dt>
+										<dd>
+											<control_select v-model="form.state" :options="$to_kv(arr_state)" />
 										</dd>
 										<dt>收费方式</dt>
 										<dd>
@@ -22,6 +26,10 @@
 										<dt>默认分类</dt>
 										<dd>
 											<control_select v-model="form.type_id" :options="$to_kv(list_type, 'type_id', 'name', 0)" />
+										</dd>
+										<dt>用户</dt>
+										<dd>
+											<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname', 0)" />
 										</dd>
 										<dt>所属城市</dt>
 										<dd>
@@ -45,16 +53,52 @@
 										</dd>
 										<dt>服务者电话</dt>
 										<dd>
-											<control_input v-model="form.service_phone" :minlength="0" :maxlength="11" placeholder="" />
+											<control_input v-model="form.phone" :minlength="0" :maxlength="11" placeholder="" />
 										</dd>
 										<dt>服务者姓名</dt>
 										<dd>
-											<control_input v-model="form.servicer_name" :minlength="0" :maxlength="16" placeholder="" />
+											<control_input v-model="form.name" :minlength="0" :maxlength="16" placeholder="" />
 										</dd>
-										<dt class="required">具体地址</dt>
+										<dt>评分</dt>
+										<dd>
+											<control_number v-model="form.score" :min="0" :max="5" />
+										</dd>
+										<dt>头像地址</dt>
+										<dd>
+											<mm_upload_img width="10rem" height="10rem" name="avatar" type="text" v-model="form.avatar" />
+										</dd>
+										<dt>服务者年龄</dt>
+										<dd>
+											<control_number v-model="form.age" :min="0" :max="9999" />
+										</dd>
+										<dt class="required">所在地址</dt>
 										<dd>
 											<control_input v-model="form.address" :minlength="0" :maxlength="255" placeholder=""
 											 :required="true" />
+										</dd>
+										<dt>奖牌</dt>
+										<dd>
+											<control_select v-model="form.medal" :options="$to_kv(arr_medal)" />
+										</dd>
+										<dt>热度</dt>
+										<dd>
+											<control_number v-model="form.hot" :min="0" :max="1000000000" />
+										</dd>
+										<dt>点赞次数</dt>
+										<dd>
+											<control_number v-model="form.praise" :min="0" :max="1000000000" />
+										</dd>
+										<dt>服务次数</dt>
+										<dd>
+											<control_number v-model="form.num" :min="0" :max="1000000000" />
+										</dd>
+										<dt>服务项</dt>
+										<dd>
+											<control_textarea v-model="form.items" type="text" placeholder="用于说明提供的服务项和价格"></control_textarea>
+										</dd>
+										<dt>正文</dt>
+										<dd>
+											<control_rich v-model="form.content"></control_rich>
 										</dd>
 									</dl>
 								</mm_form>
@@ -82,7 +126,8 @@
 		components: {},
 		data() {
 			return {
-				url: "/apis/service/member?",
+				url_add: "/apis/service/member?method=add",
+				url_set: "/apis/service/member?method=set",
 				url_get_obj: "/apis/service/member?method=get_obj",
 				field: "member_id",
 				query: {
@@ -90,49 +135,48 @@
 				},
 				form: {
 					"member_id": 0,
-					"user_id": 0,
+					"available": 0,
+					"state": 0,
 					"way": 0,
 					"type_id": 0,
+					"user_id": 0,
 					"city_id": 0,
 					"area_id": 0,
 					"position_x": 0,
 					"position_y": 0,
 					"price": 0,
-					"service_phone": '',
-					"servicer_name": '',
+					"phone": '',
+					"name": '',
+					"score": 0,
+					"avatar": '',
+					"age": 0,
 					"address": '',
+					"medal": 0,
+					"hot": 0,
+					"praise": 0,
+					"num": 0,
+					"items": '',
+					"content": '',
 				},
-				// 用户
-				'list_account':[],
+				// 是否启用
+				'arr_available':["否","是"],
+				// 状态
+				'arr_state':["","空闲中","工作中","休假中","已退出","已违规"],
 				// 收费方式
 				'arr_way':["","次","时","日","周","月","季","年"],
 				// 默认分类
 				'list_type':[],
+				// 用户
+				'list_account':[],
 				// 所属城市
 				'list_address_city':[],
 				// 所属市区
 				'list_address_area':[],
+				// 奖牌
+				'arr_medal':["","无","铜牌","银牌","金牌"],
 			}
 		},
 		methods: {
-			/**
-			 * 获取用户
-			 * @param {query} 查询条件
-			 */
-			get_account(query) {
-				var _this = this;
-				if (!query) {
-					query = {
-						field: "user_id,nickname"
-					};
-				}
-				this.$get('~/apis/user/account?size=0', query, function(json) {
-					if (json.result) {
-						_this.list_account.clear();
-						_this.list_account.addList(json.result.list)
-					}
-				});
-			},
 			/**
 			 * 获取默认分类
 			 * @param {query} 查询条件
@@ -148,6 +192,24 @@
 					if (json.result) {
 						_this.list_type.clear();
 						_this.list_type.addList(json.result.list)
+					}
+				});
+			},
+			/**
+			 * 获取用户
+			 * @param {query} 查询条件
+			 */
+			get_account(query) {
+				var _this = this;
+				if (!query) {
+					query = {
+						field: "user_id,nickname"
+					};
+				}
+				this.$get('~/apis/user/account?size=0', query, function(json) {
+					if (json.result) {
+						_this.list_account.clear();
+						_this.list_account.addList(json.result.list)
 					}
 				});
 			},
@@ -189,10 +251,10 @@
 			},
 		},
 		created() {
-			// 获取用户
-			this.get_account();
 			// 获取默认分类
 			this.get_type();
+			// 获取用户
+			this.get_account();
 			// 获取所属城市
 			this.get_address_city();
 			// 获取所属市区

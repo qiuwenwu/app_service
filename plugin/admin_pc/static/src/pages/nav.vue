@@ -1,12 +1,12 @@
 <template>
-	<main id="service_type">
+	<main id="service_nav">
 		<mm_warp>
 			<mm_container>
 				<mm_row>
 					<mm_col class="col-12">
 						<mm_card>
 							<div class="card_head arrow">
-								<h5>服务分类</h5>
+								<h5>服务导航</h5>
 							</div>
 							<div class="card_body">
 								<mm_form class="bar_filter">
@@ -15,11 +15,14 @@
 									</div>
 									<mm_list :col="3">
 										<mm_item>
-											<control_input v-model="query.keyword" title="关键词" desc="分类名称"
+											<control_input v-model="query.keyword" title="关键词" desc="英文名称 / 中文标题"
 											  />
 										</mm_item>
 										<mm_item>
-											<control_select v-model="query.father_id" title="上级分类" :options="$to_kv(list_type, 'type_id', 'name')"
+											<control_select v-model="query.available" title="是否启用" :options="$to_kv(arr_available)" />
+										</mm_item>
+										<mm_item>
+											<control_select v-model="query.father_id" title="上级" :options="$to_kv(list_nav, 'nav_id', 'name')"
 											 />
 										</mm_item>
 										<mm_item>
@@ -30,7 +33,7 @@
 								<div class="bar_action">
 									<h5><span>操作</span></h5>
 									<div class="btns">
-										<mm_btn class="btn_primary-x" url="./type_form?">添加</mm_btn>
+										<mm_btn class="btn_primary-x" url="./nav_form?">添加</mm_btn>
 										<mm_btn @click.native="show = true" class="btn_primary-x" v-bind:class="{ 'disabled': !selects }">批量修改</mm_btn>
 									</div>
 									<div class="btn_small">
@@ -45,16 +48,34 @@
 											<th class="th_selected"><input type="checkbox" :checked="select_state" @click="select_all()" /></th>
 											<th class="th_id"><span>#</span></th>
 											<th>
-												<control_reverse title="显示顺序" v-model="query.orderby" field="display" :func="search"></control_reverse>
+												<control_reverse title="是否启用" v-model="query.orderby" field="available" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="上级分类" v-model="query.orderby" field="father_id" :func="search"></control_reverse>
+												<control_reverse title="英文名称" v-model="query.orderby" field="name" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="分类名称" v-model="query.orderby" field="name" :func="search"></control_reverse>
+												<control_reverse title="中文标题" v-model="query.orderby" field="title" :func="search"></control_reverse>
 											</th>
 											<th>
-												<control_reverse title="分类图标" v-model="query.orderby" field="icon" :func="search"></control_reverse>
+												<control_reverse title="跳转链接" v-model="query.orderby" field="url" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="风格样式" v-model="query.orderby" field="style" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="样式类型" v-model="query.orderby" field="class" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="跳转方式" v-model="query.orderby" field="target" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="展现位置" v-model="query.orderby" field="position" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="呈现设备" v-model="query.orderby" field="device" :func="search"></control_reverse>
+											</th>
+											<th>
+												<control_reverse title="上级" v-model="query.orderby" field="father_id" :func="search"></control_reverse>
 											</th>
 											<th class="th_handle"><span>操作</span></th>
 										</tr>
@@ -68,19 +89,37 @@
 											<th class="th_selected"><input type="checkbox" :checked="select_has(o[field])" @click="select_change(o[field])" /></th>
 											<td>{{ o[field] }}</td>
 											<td>
-												<input class="input_display" v-model.number="o.display" @blur="set(o)" min="0" max="1000" />
-											</td>
-											<td>
-												<span>{{ $get_name(list_type, o.father_id, 'type_id', 'name') }}</span>
+												<control_switch v-model="o.available" @click.native="set(o)" />
 											</td>
 											<td>
 												<control_input :auto="true" v-model="o.name" @blur="set(o)" />
 											</td>
 											<td>
-												<img class="icon" :src="o.icon" alt="分类图标" />
+												<control_input :auto="true" v-model="o.title" @blur="set(o)" />
 											</td>
 											<td>
-												<mm_btn class="btn_primary" :url="'./type_form?type_id=' + o[field]">修改</mm_btn>
+												<control_input :auto="true" v-model="o.url" @blur="set(o)" />
+											</td>
+											<td>
+												<control_input :auto="true" v-model="o.style" @blur="set(o)" />
+											</td>
+											<td>
+												<control_input :auto="true" v-model="o.class" @blur="set(o)" />
+											</td>
+											<td>
+												<control_input :auto="true" v-model="o.target" @blur="set(o)" />
+											</td>
+											<td>
+												<control_input :auto="true" v-model="o.position" @blur="set(o)" />
+											</td>
+											<td>
+												<control_input :auto="true" v-model="o.device" @blur="set(o)" />
+											</td>
+											<td>
+												<span>{{ $get_name(list_nav, o.father_id, 'nav_id', 'name') }}</span>
+											</td>
+											<td>
+												<mm_btn class="btn_primary" :url="'./nav_form?nav_id=' + o[field]">修改</mm_btn>
 												<mm_btn class="btn_warning" @click.native="del_show(o, field)">删除</mm_btn>
 											</td>
 										</tr>
@@ -100,9 +139,13 @@
 				</div>
 				<div class="card_body pa">
 					<dl>
-						<dt>上级分类</dt>
+						<dt>是否启用</dt>
 						<dd>
-							<control_select v-model="form.father_id" :options="$to_kv(list_type, 'type_id', 'name')" />
+							<control_select v-model="form.available" :options="$to_kv(arr_available)" />
+						</dd>
+						<dt>上级</dt>
+						<dd>
+							<control_select v-model="form.father_id" :options="$to_kv(list_nav, 'nav_id', 'name')" />
 						</dd>
 					</dl>
 				</div>
@@ -125,14 +168,14 @@
 		data() {
 			return {
 				// 列表请求地址
-				url_get_list: "/apis/service/type",
-				url_del: "/apis/service/type?method=del&",
-				url_set: "/apis/service/type?method=set&",
-				url_import: "/apis/service/type?method=import&",
-				url_export: "/apis/service/type?method=export&",
-				field: "type_id",
+				url_get_list: "/apis/service/nav",
+				url_del: "/apis/service/nav?method=del&",
+				url_set: "/apis/service/nav?method=set&",
+				url_import: "/apis/service/nav?method=import&",
+				url_export: "/apis/service/nav?method=export&",
+				field: "nav_id",
 				query_set: {
-					"type_id": ""
+					"nav_id": ""
 				},
 				// 查询条件
 				query: {
@@ -140,16 +183,16 @@
 					page: 0,
 					//页面大小
 					size: '0',
-					// 服务分类ID
-					'type_id': 0,
-					// 显示顺序——最小值
-					'display_min': 0,
-					// 显示顺序——最大值
-					'display_max': 0,
-					// 上级分类ID
-					'father_id': '',
-					// 分类名称
+					// 导航ID
+					'nav_id': 0,
+					// 是否启用
+					'available': '',
+					// 英文名称
 					'name': '',
+					// 中文标题
+					'title': '',
+					// 上级ID
+					'father_id': '',
 					// 关键词
 					'keyword': '',
 					//排序
@@ -158,28 +201,30 @@
 				form: {},
 				//颜色
 				arr_color: ['', '', 'font_yellow', 'font_success', 'font_warning', 'font_primary', 'font_info', 'font_default'],
-				// 上级分类
-				'list_type':[],
+				// 是否启用
+				'arr_available':["否","是"],
+				// 上级
+				'list_nav':[],
 				// 视图模型
 				vm: {}
 			}
 		},
 		methods: {
 			/**
-			 * 获取上级分类
+			 * 获取上级
 			 * @param {query} 查询条件
 			 */
-			get_type(query) {
+			get_nav(query) {
 				var _this = this;
 				if (!query) {
 					query = {
-						field: "type_id,name,father_id"
+						field: "nav_id,name,father_id"
 					};
 				}
-				this.$get('~/apis/service/type?size=0', query, function(json) {
+				this.$get('~/apis/sys/nav?size=0', query, function(json) {
 					if (json.result) {
-						_this.list_type .clear();
-						_this.list_type .addList(json.result.list)
+						_this.list_nav .clear();
+						_this.list_nav .addList(json.result.list)
 					}
 				});
 			},
@@ -194,8 +239,8 @@
 			}
 		},
 		created() {
-			// 获取上级分类
-			this.get_type();
+			// 获取上级
+			this.get_nav();
 		},
 		computed: {
 			list_new() {

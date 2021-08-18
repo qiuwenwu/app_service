@@ -21,11 +21,15 @@
 										</dd>
 										<dt>状态</dt>
 										<dd>
-											<control_number v-model="form.state" :min="0" :max="9" />
+											<control_select v-model="form.state" :options="$to_kv(arr_state)" />
 										</dd>
 										<dt>结款人</dt>
 										<dd>
-											<control_input v-model="form.user_id" :minlength="0" :maxlength="0" placeholder="" />
+											<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname', 0)" />
+										</dd>
+										<dt>备注</dt>
+										<dd>
+											<control_textarea v-model="form.desc" type="text" placeholder="强制取消的理由"></control_textarea>
 										</dd>
 									</dl>
 								</mm_form>
@@ -53,7 +57,8 @@
 		components: {},
 		data() {
 			return {
-				url: "/apis/service/balance?",
+				url_add: "/apis/service/balance?method=add",
+				url_set: "/apis/service/balance?method=set",
 				url_get_obj: "/apis/service/balance?method=get_obj",
 				field: "account_id",
 				query: {
@@ -65,12 +70,37 @@
 					"settlement": 0,
 					"state": 0,
 					"user_id": 0,
+					"desc": '',
 				},
+				// 状态
+				'arr_state':["","申请中","已提取","已取消"],
+				// 结款人
+				'list_account':[],
 			}
 		},
 		methods: {
+			/**
+			 * 获取结款人
+			 * @param {query} 查询条件
+			 */
+			get_account(query) {
+				var _this = this;
+				if (!query) {
+					query = {
+						field: "user_id,nickname"
+					};
+				}
+				this.$get('~/apis/user/account?size=0', query, function(json) {
+					if (json.result) {
+						_this.list_account.clear();
+						_this.list_account.addList(json.result.list)
+					}
+				});
+			},
 		},
 		created() {
+			// 获取结款人
+			this.get_account();
 		}
 	}
 </script>

@@ -6,7 +6,7 @@
     "orderby_default": "`display` asc",
     "field_obj": "`type_id`,`father_id`,`name`,`icon`",
     "field_default": "`type_id`,`display`,`father_id`,`name`,`icon`",
-    "method": "get get_obj sum count",
+    "method": "get get_obj avg sum count",
     "query": {
         "display_min": "`display` >= {0}",
         "display_max": "`display` <= {0}",

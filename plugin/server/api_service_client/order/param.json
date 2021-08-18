@@ -6,20 +6,29 @@
             "state",
             "way",
             "type_id",
-            "user_id",
+            "demander_id",
             "city_id",
             "area_id",
             "position_x",
             "position_y",
             "price",
             "price_ago",
-            "service_phone",
-            "servicer_name"
+            "phone",
+            "name",
+            "user_id",
+            "score",
+            "avatar",
+            "items",
+            "content"
         ],
         "body_required": [
-            "address",
-            "user_phone"
-        ]
+            "demander_phone",
+            "demander_name",
+            "address"
+        ],
+        "body_default": {
+            "demander_id": "`demander_id` = {user_id}"
+        }
     },
     "del": {
         "query": [],
@@ -34,6 +43,7 @@
             "state_max",
             "way_min",
             "way_max",
+            "demander_name",
             "position_x_min",
             "position_x_max",
             "position_y_min",
@@ -42,7 +52,10 @@
             "price_max",
             "price_ago_min",
             "price_ago_max",
-            "servicer_name",
+            "name",
+            "score_min",
+            "score_max",
+            "content",
             "keyword"
         ],
         "query_required": [],
@@ -52,7 +65,9 @@
             "way",
             "way_add",
             "type_id",
-            "user_id",
+            "demander_id",
+            "demander_phone",
+            "demander_name",
             "city_id",
             "area_id",
             "position_x",
@@ -64,9 +79,14 @@
             "price_ago",
             "price_ago_add",
             "address",
-            "user_phone",
-            "service_phone",
-            "servicer_name"
+            "phone",
+            "name",
+            "user_id",
+            "score",
+            "score_add",
+            "avatar",
+            "items",
+            "content"
         ],
         "body_required": [],
         "body_not": []
@@ -78,6 +98,11 @@
             "state_max",
             "way_min",
             "way_max",
+            "type_id",
+            "demander_id",
+            "demander_name",
+            "city_id",
+            "area_id",
             "position_x_min",
             "position_x_max",
             "position_y_min",
@@ -92,7 +117,11 @@
             "time_create_max",
             "time_update_min",
             "time_update_max",
-            "servicer_name",
+            "name",
+            "user_id",
+            "score_min",
+            "score_max",
+            "content",
             "keyword"
         ],
         "query_required": []
@@ -184,13 +213,35 @@
             }
         },
         {
-            "name": "user_id",
-            "title": "下单用户ID",
-            "description": "提供这些服务的用户ID(user_account.nickname.user_id)",
+            "name": "demander_id",
+            "title": "需求方用户ID",
+            "description": "需要这些服务的用户ID(user_account.nickname.user_id)",
             "type": "number",
             "dataType": "mediumint",
             "number": {
                 "max": 8388607
+            }
+        },
+        {
+            "name": "demander_phone",
+            "title": "联系电话",
+            "description": "下单者的电话",
+            "type": "string",
+            "dataType": "varchar",
+            "string": {
+                "max": 11,
+                "notEmpty": true
+            }
+        },
+        {
+            "name": "demander_name",
+            "title": "需求方姓名",
+            "description": "下单者的姓名",
+            "type": "string",
+            "dataType": "varchar",
+            "string": {
+                "max": 16,
+                "notEmpty": true
             }
         },
         {
@@ -450,28 +501,18 @@
             }
         },
         {
-            "name": "user_phone",
-            "title": "联系电话",
-            "description": "",
-            "type": "string",
-            "dataType": "varchar",
-            "string": {
-                "max": 11,
-                "notEmpty": true
-            }
-        },
-        {
-            "name": "service_phone",
+            "name": "phone",
             "title": "服务者电话",
             "description": "",
             "type": "string",
             "dataType": "varchar",
             "string": {
-                "max": 11
+                "max": 11,
+                "format": "phone"
             }
         },
         {
-            "name": "servicer_name",
+            "name": "name",
             "title": "服务者姓名",
             "description": "",
             "type": "string",
@@ -481,9 +522,75 @@
             }
         },
         {
+            "name": "user_id",
+            "title": "服务者ID",
+            "description": "提供这些服务的用户ID(user_account.nickname.user_id)",
+            "type": "number",
+            "dataType": "int",
+            "number": {
+                "max": 8388607
+            }
+        },
+        {
+            "name": "score",
+            "title": "评分",
+            "description": "",
+            "type": "number",
+            "dataType": "double",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "score_min",
+            "title": "评分——最小值",
+            "description": "",
+            "type": "number",
+            "dataType": "double",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "score_max",
+            "title": "评分——最大值",
+            "description": "",
+            "type": "number",
+            "dataType": "double",
+            "number": {
+                "max": 5
+            }
+        },
+        {
+            "name": "avatar",
+            "title": "头像地址",
+            "description": "",
+            "type": "string",
+            "dataType": "varchar",
+            "string": {
+                "max": 255
+            }
+        },
+        {
+            "name": "items",
+            "title": "服务项",
+            "description": "用于说明提供的服务项和价格",
+            "type": "string",
+            "dataType": "text",
+            "string": {}
+        },
+        {
+            "name": "content",
+            "title": "正文",
+            "description": "服务的内容，用于介绍具体提供哪些服务",
+            "type": "string",
+            "dataType": "text",
+            "string": {}
+        },
+        {
             "name": "keyword",
             "title": "关键词",
-            "description": "用于搜索服务者姓名(servicer_name)",
+            "description": "用于搜索需求方姓名(demander_name)、服务者姓名(name)、正文(content)",
             "type": "string",
             "dataType": "varchar",
             "string": {}

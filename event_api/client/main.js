@@ -1,5 +1,5 @@
 // 使用api管理器
-var api = $.api_admin('service_client', 'service_client');
+var api = $.api_admin('service_client', '同城服务客户端');
 // 首次启动更新api接口;
 api.update();
 

@@ -3,9 +3,10 @@
     "title": "服务成员",
     "description": "用于填写默认信息",
     "path": "/api/service/member",
-    "method": "GET",
+    "method": "ALL",
     "cache": 0,
     "client_cache": false,
+    "func_file": "./index.js",
     "param_path": "./param.json",
     "sql_path": "./sql.json",
     "check_param": true

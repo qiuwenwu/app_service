@@ -1,8 +1,8 @@
 {
-    "name": "service_achievement_manage",
-    "title": "业绩",
+    "name": "service_ad_manage",
+    "title": "广告信息",
     "description": "",
-    "path": "/apis/service/achievement",
+    "path": "/apis/service/ad",
     "method": "ALL",
     "cache": 0,
     "client_cache": false,

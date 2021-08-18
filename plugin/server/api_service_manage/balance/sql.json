@@ -4,8 +4,8 @@
     "table": "service_balance",
     "key": "account_id",
     "orderby_default": "`account_id` desc",
-    "field_obj": "`account_id`,`remain_cash`,`settlement`,`state`,`user_id`",
-    "field_default": "`account_id`,`remain_cash`,`settlement`,`state`,`user_id`,`time_create`,`time_update`",
+    "field_obj": "`account_id`,`remain_cash`,`settlement`,`state`,`user_id`,`desc`",
+    "field_default": "`account_id`,`remain_cash`,`settlement`,`state`,`user_id`,`desc`,`time_create`,`time_update`",
     "query": {
         "remain_cash_min": "`remain_cash` >= {0}",
         "remain_cash_max": "`remain_cash` <= {0}",
@@ -20,13 +20,31 @@
         "time_create_min": "`time_create` >= '{0}'",
         "time_create_max": "`time_create` <= '{0}'",
         "time_update_min": "`time_update` >= '{0}'",
-        "time_update_max": "`time_update` <= '{0}'"
+        "time_update_max": "`time_update` <= '{0}'",
+        "desc": "`desc` like '%{0}%'"
     },
     "update": {
         "remain_cash_add": "`remain_cash` = `remain_cash` + {0}",
         "settlement_add": "`settlement` = `settlement` + {0}",
         "state_add": "`state` = `state` + {0}"
     },
-    "format": [],
+    "format": [
+        {
+            "key": "state",
+            "title": "状态",
+            "list": [
+                "",
+                "申请中",
+                "已提取",
+                "已取消"
+            ]
+        },
+        {
+            "key": "user_id",
+            "title": "结款人",
+            "table": "user_account",
+            "name": "nickname"
+        }
+    ],
     "field_hide": []
 }

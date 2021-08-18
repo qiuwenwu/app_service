@@ -15,6 +15,13 @@
 									</div>
 									<mm_list :col="3">
 										<mm_item>
+											<control_select v-model="query.state" title="状态" :options="$to_kv(arr_state)" @change="search()" />
+										</mm_item>
+										<mm_item>
+											<control_select v-model="query.user_id" title="结款人" :options="$to_kv(list_account, 'user_id', 'nickname')"
+											 @change="search()" />
+										</mm_item>
+										<mm_item>
 											<mm_btn class="btn_primary-x" type="reset" @click.native="reset();search()">重置</mm_btn>
 										</mm_item>
 									</mm_list>
@@ -48,6 +55,9 @@
 												<control_reverse title="结款人" v-model="query.orderby" field="user_id" :func="search"></control_reverse>
 											</th>
 											<th>
+												<control_reverse title="备注" v-model="query.orderby" field="desc" :func="search"></control_reverse>
+											</th>
+											<th>
 												<control_reverse title="创建时间" v-model="query.orderby" field="time_create" :func="search"></control_reverse>
 											</th>
 											<th>
@@ -68,10 +78,13 @@
 												<span>{{ o.settlement }}</span>
 											</td>
 											<td>
-												<span>{{ o.state }}</span>
+												<span v-bind:class="arr_color[o.state]">{{arr_state[o.state] }}</span>
 											</td>
 											<td>
-												<span>{{ o.user_id }}</span>
+												<span>{{ $get_name(list_account, o.user_id, 'user_id', 'nickname') }}</span>
+											</td>
+											<td>
+												<span>{{ o.desc }}</span>
 											</td>
 											<td>
 												<span>{{ $to_time(o.time_create, 'yyyy-MM-dd hh:mm') }}</span>
@@ -110,8 +123,16 @@
 				<div class="card_head">
 					<h5>批量修改</h5>
 				</div>
-				<div class="card_body">
+				<div class="card_body pa">
 					<dl>
+						<dt>状态</dt>
+						<dd>
+							<control_select v-model="form.state" :options="$to_kv(arr_state)" />
+						</dd>
+						<dt>结款人</dt>
+						<dd>
+							<control_select v-model="form.user_id" :options="$to_kv(list_account, 'user_id', 'nickname')" />
+						</dd>
 					</dl>
 				</div>
 				<div class="card_foot">
@@ -159,9 +180,11 @@
 					// 结款金额——最大值
 					'settlement_max': 0,
 					// 状态——最小值
-					'state_min': 0,
+					'state_min': '',
 					// 状态——最大值
-					'state_max': 0,
+					'state_max': '',
+					// 结款人
+					'user_id': '',
 					// 创建时间——开始时间
 					'time_create_min': '',
 					// 创建时间——结束时间
@@ -176,13 +199,37 @@
 				form: {},
 				//颜色
 				arr_color: ['', '', 'font_yellow', 'font_success', 'font_warning', 'font_primary', 'font_info', 'font_default'],
+				// 状态
+				'arr_state':["","申请中","已提取","已取消"],
+				// 结款人
+				'list_account':[],
 				// 视图模型
 				vm: {}
 			}
 		},
 		methods: {
+			/**
+			 * 获取结款人
+			 * @param {query} 查询条件
+			 */
+			get_account(query) {
+				var _this = this;
+				if (!query) {
+					query = {
+						field: "user_id,nickname"
+					};
+				}
+				this.$get('~/apis/user/account?size=0', query, function(json) {
+					if (json.result) {
+						_this.list_account.clear();
+						_this.list_account.addList(json.result.list)
+					}
+				});
+			},
 		},
 		created() {
+			// 获取结款人
+			this.get_account();
 		}
 	}
 </script>

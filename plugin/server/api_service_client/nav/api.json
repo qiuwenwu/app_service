@@ -1,0 +1,12 @@
+{
+    "name": "service_nav",
+    "title": "服务导航",
+    "description": "用于自定义同城服务应用的导航",
+    "path": "/api/service/nav",
+    "method": "GET",
+    "cache": 0,
+    "client_cache": false,
+    "param_path": "./param.json",
+    "sql_path": "./sql.json",
+    "check_param": true
+}

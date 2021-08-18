@@ -5,12 +5,12 @@
         {
             "name": "service",
             "path": "/service",
-            "redirect": "/service/achievement"
+            "redirect": "/service/ad"
         },
         {
-            "name": "service_achievement",
-            "path": "/service/achievement",
-            "component": "/service/admin_pc/src/pages/achievement.vue",
+            "name": "service_ad",
+            "path": "/service/ad",
+            "component": "/service/admin_pc/src/pages/ad.vue",
             "level": 3,
             "oauth": {
                 "signIn": true,
@@ -19,9 +19,9 @@
             }
         },
         {
-            "name": "service_achievement_form",
-            "path": "/service/achievement_form",
-            "component": "/service/admin_pc/src/pages/achievement_form.vue",
+            "name": "service_ad_form",
+            "path": "/service/ad_form",
+            "component": "/service/admin_pc/src/pages/ad_form.vue",
             "level": 4,
             "oauth": {
                 "signIn": true,
@@ -52,28 +52,6 @@
             }
         },
         {
-            "name": "service_info",
-            "path": "/service/info",
-            "component": "/service/admin_pc/src/pages/info.vue",
-            "level": 3,
-            "oauth": {
-                "signIn": true,
-                "gm": 2,
-                "user_admin": []
-            }
-        },
-        {
-            "name": "service_info_form",
-            "path": "/service/info_form",
-            "component": "/service/admin_pc/src/pages/info_form.vue",
-            "level": 4,
-            "oauth": {
-                "signIn": true,
-                "gm": 2,
-                "user_admin": []
-            }
-        },
-        {
             "name": "service_member",
             "path": "/service/member",
             "component": "/service/admin_pc/src/pages/member.vue",
@@ -88,6 +66,28 @@
             "name": "service_member_form",
             "path": "/service/member_form",
             "component": "/service/admin_pc/src/pages/member_form.vue",
+            "level": 4,
+            "oauth": {
+                "signIn": true,
+                "gm": 2,
+                "user_admin": []
+            }
+        },
+        {
+            "name": "service_nav",
+            "path": "/service/nav",
+            "component": "/service/admin_pc/src/pages/nav.vue",
+            "level": 3,
+            "oauth": {
+                "signIn": true,
+                "gm": 2,
+                "user_admin": []
+            }
+        },
+        {
+            "name": "service_nav_form",
+            "path": "/service/nav_form",
+            "component": "/service/admin_pc/src/pages/nav_form.vue",
             "level": 4,
             "oauth": {
                 "signIn": true,
@@ -150,15 +150,15 @@
         {
             "title": "同城服务",
             "name": "service",
-            "icon": "<i class=\"fa-briefcase\"></i>",
+            "icon": "<i class=\"fa-handshake-o\"></i>",
             "url": "/service",
             "display": 0,
             "sub": [
                 {
-                    "title": "业绩",
+                    "title": "广告信息",
                     "show": false,
-                    "name": "service_achievement",
-                    "url": "/service/achievement"
+                    "name": "service_ad",
+                    "url": "/service/ad"
                 },
                 {
                     "title": "结算",
@@ -167,19 +167,19 @@
                     "url": "/service/balance"
                 },
                 {
-                    "title": "服务信息",
-                    "show": false,
-                    "name": "service_info",
-                    "url": "/service/info"
-                },
-                {
                     "title": "服务成员",
                     "show": false,
                     "name": "service_member",
                     "url": "/service/member"
                 },
                 {
-                    "title": " 订单信息",
+                    "title": "服务导航",
+                    "show": false,
+                    "name": "service_nav",
+                    "url": "/service/nav"
+                },
+                {
+                    "title": "订单信息",
                     "show": false,
                     "name": "service_order",
                     "url": "/service/order"

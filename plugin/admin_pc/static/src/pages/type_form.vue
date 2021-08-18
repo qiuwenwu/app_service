@@ -13,7 +13,7 @@
 									<dl>
 										<dt>上级分类</dt>
 										<dd>
-											<control_select v-model="form.father_id" :options="$to_kv(list_type, 'type_id', 'name', 0)" />
+											<control_select v-model="form.father_id" :options="$to_kv(list_type, 'type_id', 'name', '0')" />
 										</dd>
 										<dt>分类名称</dt>
 										<dd>
@@ -49,7 +49,8 @@
 		components: {},
 		data() {
 			return {
-				url: "/apis/service/type?",
+				url_add: "/apis/service/type?method=add",
+				url_set: "/apis/service/type?method=set",
 				url_get_obj: "/apis/service/type?method=get_obj",
 				field: "type_id",
 				query: {
